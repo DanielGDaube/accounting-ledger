@@ -110,11 +110,9 @@ public class FinancialTracker {
             while (true) {
                 System.out.print("Enter the date and time of the deposit in the following format:\nyyyy-MM-dd HH:mm:ss :");
                 String dateTime = scanner.nextLine();
-                int spaceIndex = dateTime.indexOf(' ');
-                String dateString = dateTime.substring(0, spaceIndex);
-                LocalDate date = LocalDate.parse(dateString);
-                String timeString = dateTime.substring(spaceIndex + 1);
-                LocalTime time = LocalTime.parse(timeString);
+                LocalDate date = LocalDate.parse(dateTime, DATE_FMT);
+                LocalTime time = LocalTime.parse(dateTime, TIME_FMT);
+
                 System.out.println("Enter the following information:");
                 System.out.print("Description:");
                 String description = scanner.nextLine();
@@ -144,11 +142,9 @@ public class FinancialTracker {
         while (true) {
             System.out.print("Enter the date and time of the deposit in the following format:\nyyyy-MM-dd HH:mm:ss :");
             String dateTime = scanner.nextLine();
-            int spaceIndex = dateTime.indexOf(' ');
-            String dateString = dateTime.substring(0, spaceIndex);
-            LocalDate date = LocalDate.parse(dateString);
-            String timeString = dateTime.substring(spaceIndex + 1);
-            LocalTime time = LocalTime.parse(timeString);
+            LocalDate date = LocalDate.parse(dateTime, DATE_FMT);
+            LocalTime time = LocalTime.parse(dateTime, TIME_FMT);
+
             System.out.println("Enter the following information:");
             System.out.print("Description:");
             String description = scanner.nextLine();
