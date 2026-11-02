@@ -1,13 +1,16 @@
 package com.pluralsight;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class Transaction {
-    private String date;
-    private String time;
+    private LocalDate date;
+    private LocalTime time;
     private String description;
     private String vendor;
     private double amount;
 
-    public Transaction(String date, String time, String description, String vendor, double amount) {
+    public Transaction(LocalDate date, LocalTime time, String description, String vendor, double amount) {
         this.date = date;
         this.time = time;
         this.description = description;
@@ -15,11 +18,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
@@ -36,6 +39,6 @@ public class Transaction {
     }
     @Override
     public String toString(){
-        return String.format("%s|,%s|,%s|,%s|,%.2f",date, time, description, vendor, amount);
+        return String.format("%s|%s|%s|%s|%.2f",date, time, description, vendor, amount);
     }
 }

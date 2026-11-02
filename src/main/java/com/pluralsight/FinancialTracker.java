@@ -2,6 +2,7 @@ package com.pluralsight;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -82,8 +83,8 @@ public class FinancialTracker {
 
             while ((line = accountingReader.readLine()) != null) {
                 String[] tokens = line.split("\\|");
-                String date = tokens[0];
-                String time = tokens[1];
+                LocalDate date = LocalDate.parse(tokens[0]);
+                LocalTime time = LocalTime.parse(tokens[1]);
                 String description = tokens[2];
                 String vendor = tokens[3];
                 double amount = Double.parseDouble(tokens[4]);
@@ -110,8 +111,10 @@ public class FinancialTracker {
                 System.out.print("Enter the date and time of the deposit in the following format:\nyyyy-MM-dd HH:mm:ss :");
                 String dateTime = scanner.nextLine();
                 int spaceIndex = dateTime.indexOf(' ');
-                String date = dateTime.substring(0, spaceIndex);
-                String time = dateTime.substring(spaceIndex + 1);
+                String dateString = dateTime.substring(0, spaceIndex);
+                LocalDate date = LocalDate.parse(dateString);
+                String timeString = dateTime.substring(spaceIndex + 1);
+                LocalTime time = LocalTime.parse(timeString);
                 System.out.println("Enter the following information:");
                 System.out.print("Description:");
                 String description = scanner.nextLine();
@@ -124,9 +127,8 @@ public class FinancialTracker {
                     scanner.nextLine();
                     continue;
                 }
-                String amount = String.format("%.2f\n", numAmount);
-                String info = String.join("|", date, time, description, vendor, amount);
-                ledgerWriter(info);
+                transactions.add(new Transaction(date, time, description, vendor, numAmount));
+                ledgerWriter(transactions);
                 break;
             }
 
@@ -143,8 +145,10 @@ public class FinancialTracker {
             System.out.print("Enter the date and time of the deposit in the following format:\nyyyy-MM-dd HH:mm:ss :");
             String dateTime = scanner.nextLine();
             int spaceIndex = dateTime.indexOf(' ');
-            String date = dateTime.substring(0, spaceIndex);
-            String time = dateTime.substring(spaceIndex + 1);
+            String dateString = dateTime.substring(0, spaceIndex);
+            LocalDate date = LocalDate.parse(dateString);
+            String timeString = dateTime.substring(spaceIndex + 1);
+            LocalTime time = LocalTime.parse(timeString);
             System.out.println("Enter the following information:");
             System.out.print("Description:");
             String description = scanner.nextLine();
@@ -157,9 +161,9 @@ public class FinancialTracker {
                 scanner.nextLine();
                 continue;
             }
-            String amount = String.format("-%.2f\n", numAmount);
-            String info = String.join("|", date, time, description, vendor, amount);
-            ledgerWriter(info);
+            numAmount = -numAmount;
+            transactions.add(new Transaction(date, time, description, vendor, numAmount));
+            ledgerWriter(transactions);
             break;
         }
     }
@@ -259,9 +263,10 @@ public class FinancialTracker {
         /* TODO – return Double   or null */
         return null;
     }
-    private static void ledgerWriter(String info) throws IOException {
+    private static void ledgerWriter(ArrayList transactions) throws IOException {
         BufferedWriter ledgerWriter = new BufferedWriter(new FileWriter(FILE_NAME, true));
-        ledgerWriter.write(info);
+        ledgerWriter.write(transactions.get(transactions.size()-1).toString());
+        ledgerWriter.write("\n");
         ledgerWriter.close();
     }
 }
