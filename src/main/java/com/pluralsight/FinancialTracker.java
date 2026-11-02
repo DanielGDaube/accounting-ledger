@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 /*
@@ -181,7 +182,7 @@ public class FinancialTracker {
             String input = scanner.nextLine().trim();
 
             switch (input.toUpperCase()) {
-                case "A" -> displayLedger();
+                case "A" -> displayLedger(transactions);
                 case "D" -> displayDeposits();
                 case "P" -> displayPayments();
                 case "R" -> reportsMenu(scanner);
@@ -194,7 +195,11 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Display helpers: show data in neat columns
        ------------------------------------------------------------------ */
-    private static void displayLedger() { /* TODO – print all transactions in column format, newest first */ }
+    private static void displayLedger(ArrayList transactions) {
+        for (int i = transactions.size() - 1; i >= 0 ; i--) {
+            System.out.println(transactions.get(i));
+        }
+    }
 
     private static void displayDeposits() { /* TODO – only amount > 0               */ }
 
