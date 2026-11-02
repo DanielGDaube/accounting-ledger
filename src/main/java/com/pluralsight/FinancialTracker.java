@@ -138,8 +138,30 @@ public class FinancialTracker {
      * Amount must be entered as a positive number,
      * then converted to a negative amount before storing.
      */
-    private static void addPayment(Scanner scanner) {
-        // TODO
+    private static void addPayment(Scanner scanner) throws IOException {
+        while (true) {
+            System.out.print("Enter the date and time of the deposit in the following format:\nyyyy-MM-dd HH:mm:ss :");
+            String dateTime = scanner.nextLine();
+            int spaceIndex = dateTime.indexOf(' ');
+            String date = dateTime.substring(0, spaceIndex);
+            String time = dateTime.substring(spaceIndex + 1);
+            System.out.println("Enter the following information:");
+            System.out.print("Description:");
+            String description = scanner.nextLine();
+            System.out.print("Vendor:");
+            String vendor = scanner.nextLine();
+            System.out.print("Amount:");
+            double numAmount = scanner.nextDouble();
+            if (numAmount < 0) {
+                System.out.println("Inputted amount cannot be negative or 0!");
+                scanner.nextLine();
+                continue;
+            }
+            String amount = String.format("-%.2f\n", numAmount);
+            String info = String.join("|", date, time, description, vendor, amount);
+            ledgerWriter(info);
+            break;
+        }
     }
 
     /* ------------------------------------------------------------------
