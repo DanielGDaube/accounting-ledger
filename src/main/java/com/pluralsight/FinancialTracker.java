@@ -201,7 +201,13 @@ public class FinancialTracker {
         }
     }
 
-    private static void displayDeposits() { /* TODO – only amount > 0               */ }
+    private static void displayDeposits() {
+        for (Transaction transaction : transactions) {
+            if (transaction.getAmount() > 0){
+                System.out.println(transaction);
+            }
+        }
+    }
 
     private static void displayPayments() { /* TODO – only amount < 0               */ }
 
