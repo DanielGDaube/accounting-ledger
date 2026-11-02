@@ -1,8 +1,6 @@
 package com.pluralsight;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -17,10 +15,7 @@ import java.util.Scanner;
  * A deposit has a positive amount; a payment is stored
  * as a negative amount.
  *
- * TODO: create the Transaction class in this package first.
- *       One object = one line of the file. Decide its fields from
- *       the file format above, add a constructor and getters.
- *       This class does not compile until Transaction exists.
+
  */
 public class FinancialTracker {
 
@@ -41,7 +36,7 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Main menu
        ------------------------------------------------------------------ */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         loadTransactions(FILE_NAME);
 
 
@@ -110,8 +105,32 @@ public class FinancialTracker {
      * Validate that the amount entered is positive.
      * Store the amount as-is (positive) and append to the file.
      */
-    private static void addDeposit(Scanner scanner) {
-        // TODO
+    private static void addDeposit(Scanner scanner) throws IOException {
+            while (true) {
+                System.out.print("Enter the date and time of the deposit in the following format:\nyyyy-MM-dd HH:mm:ss :");
+                String dateTime = scanner.nextLine();
+                int spaceIndex = dateTime.indexOf(' ');
+                String date = dateTime.substring(0, spaceIndex);
+                String time = dateTime.substring(spaceIndex + 1);
+                System.out.println("Enter the following information:");
+                System.out.print("Description:");
+                String description = scanner.nextLine();
+                System.out.print("Vendor:");
+                String vendor = scanner.nextLine();
+                System.out.print("Amount:");
+                double numAmount = scanner.nextDouble();
+                if (numAmount < 0) {
+                    System.out.println("Inputted amount cannot be negative or 0!");
+                    scanner.nextLine();
+                    continue;
+                }
+                String amount = String.format("%.2f\n", numAmount);
+                String info = String.join("|", date, time, description, vendor, amount);
+                ledgerWriter(info);
+                break;
+            }
+
+
     }
 
     /**
@@ -217,5 +236,10 @@ public class FinancialTracker {
     private static Double parseDouble(String s) {
         /* TODO – return Double   or null */
         return null;
+    }
+    private static void ledgerWriter(String info) throws IOException {
+        BufferedWriter ledgerWriter = new BufferedWriter(new FileWriter(FILE_NAME, true));
+        ledgerWriter.write(info);
+        ledgerWriter.close();
     }
 }
