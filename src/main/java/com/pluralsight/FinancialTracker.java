@@ -203,6 +203,7 @@ public class FinancialTracker {
 
 
     private static void displayDeposits() {
+        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime().compareTo(transaction1.getDateTime()));
         for (Transaction transaction : transactions) {
             if (transaction.getAmount() > 0){
                 columnPrint(transaction);
@@ -211,6 +212,7 @@ public class FinancialTracker {
     }
 
     private static void displayPayments() {
+        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime().compareTo(transaction1.getDateTime()));
         for (Transaction transaction : transactions) {
             if (transaction.getAmount() < 0){
                 columnPrint(transaction);
