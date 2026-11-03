@@ -197,7 +197,7 @@ public class FinancialTracker {
     private static void displayLedger() {
         Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime().compareTo(transaction1.getDateTime()));
         for (Transaction transaction : transactions){
-            System.out.println(transaction);
+            columnPrint(transaction);
         }
     }
 
@@ -205,7 +205,7 @@ public class FinancialTracker {
     private static void displayDeposits() {
         for (Transaction transaction : transactions) {
             if (transaction.getAmount() > 0){
-                System.out.println(transaction);
+                columnPrint(transaction);
             }
         }
     }
@@ -213,7 +213,7 @@ public class FinancialTracker {
     private static void displayPayments() {
         for (Transaction transaction : transactions) {
             if (transaction.getAmount() < 0){
-                System.out.println(transaction);
+                columnPrint(transaction);
             }
         }
          }
@@ -282,6 +282,10 @@ public class FinancialTracker {
         ledgerWriter.write(transactions.get(transactions.size()-1).toString());
         ledgerWriter.write("\n");
         ledgerWriter.close();
+    }
+    private static void columnPrint(Transaction transaction){
+        System.out.printf("%-10tF|%-8tT|%-30s|%-20s|%.2f%n", transaction.getDate(), transaction.getTime(), transaction.getDescription(),
+                transaction.getVendor(), transaction.getAmount());
     }
 
 }
