@@ -3,7 +3,7 @@ package com.pluralsight;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class Transaction {
+public class Transaction  {
     private LocalDate date;
     private LocalTime time;
     private String description;
@@ -41,4 +41,5 @@ public class Transaction {
     public String toString(){
         return String.format("%s|%s|%s|%s|%.2f",date, time, description, vendor, amount);
     }
+
 }

@@ -7,7 +7,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
+
+
 
 /*
  * Capstone skeleton – personal finance tracker.
@@ -182,7 +185,7 @@ public class FinancialTracker {
             String input = scanner.nextLine().trim();
 
             switch (input.toUpperCase()) {
-                case "A" -> displayLedger(transactions);
+                case "A" -> displayLedger();
                 case "D" -> displayDeposits();
                 case "P" -> displayPayments();
                 case "R" -> reportsMenu(scanner);
@@ -195,11 +198,14 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Display helpers: show data in neat columns
        ------------------------------------------------------------------ */
-    private static void displayLedger(ArrayList transactions) {
-        for (int i = transactions.size() - 1; i >= 0 ; i--) {
-            System.out.println(transactions.get(i));
+    private static void displayLedger() {
+        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDate().compareTo(transaction1.getDate()));
+        for (Transaction transaction : transactions){
+            System.out.println(transaction);
         }
+
     }
+
 
     private static void displayDeposits() {
         for (Transaction transaction : transactions) {
@@ -276,4 +282,5 @@ public class FinancialTracker {
         ledgerWriter.write("\n");
         ledgerWriter.close();
     }
+
 }
