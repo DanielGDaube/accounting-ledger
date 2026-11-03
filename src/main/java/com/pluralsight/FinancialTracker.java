@@ -4,6 +4,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -239,7 +240,7 @@ public class FinancialTracker {
             String input = scanner.nextLine().trim();
 
             switch (input) {
-                case "1" -> {/* TODO – month-to-date report */ }
+                case "1" -> monthToDateReport();
                 case "2" -> {/* TODO – previous month report */ }
                 case "3" -> {/* TODO – year-to-date report   */ }
                 case "4" -> {/* TODO – previous year report  */ }
@@ -254,6 +255,17 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Reporting helpers
        ------------------------------------------------------------------ */
+    private static void monthToDateReport(){
+        Month currentMonth = LocalDate.now().getMonth();
+        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime().compareTo(transaction1.getDateTime()));
+        for (Transaction transaction : transactions){
+            if (findMonth(transaction) == currentMonth){
+                columnPrint(transaction);
+            }
+        }
+
+    }
+
     private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
         // TODO – iterate transactions, print those within the range
     }
@@ -273,6 +285,9 @@ public class FinancialTracker {
     private static LocalDate parseDate(String s) {
         /* TODO – return LocalDate or null */
         return null;
+    }
+    private static Month findMonth(Transaction transaction){
+        return transaction.getDateTime().getMonth();
     }
 
     private static Double parseDouble(String s) {
