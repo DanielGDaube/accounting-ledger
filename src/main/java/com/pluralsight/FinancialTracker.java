@@ -7,7 +7,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Scanner;
 
 
@@ -84,15 +83,15 @@ public class FinancialTracker {
             BufferedReader accountingReader = new BufferedReader(new FileReader(fileName));
 
             String line;
+            LocalDateTime dateTime;
 
             while ((line = accountingReader.readLine()) != null) {
                 String[] tokens = line.split("\\|");
-                LocalDate date = LocalDate.parse(tokens[0]);
-                LocalTime time = LocalTime.parse(tokens[1]);
+                dateTime = LocalDate.parse(tokens[0]).atTime(LocalTime.parse(tokens[1]));
                 String description = tokens[2];
                 String vendor = tokens[3];
                 double amount = Double.parseDouble(tokens[4]);
-                transactions.add(new Transaction(date, time, description, vendor, amount));
+                transactions.add(new Transaction(dateTime, description, vendor, amount));
             }
         }
         catch (Exception e){
@@ -113,9 +112,8 @@ public class FinancialTracker {
     private static void addDeposit(Scanner scanner) throws IOException {
             while (true) {
                 System.out.print("Enter the date and time of the deposit in the following format:\nyyyy-MM-dd HH:mm:ss :");
-                String dateTime = scanner.nextLine();
-                LocalDate date = LocalDate.parse(dateTime, DATE_FMT);
-                LocalTime time = LocalTime.parse(dateTime, TIME_FMT);
+                LocalDateTime dateTime = LocalDateTime.parse(scanner.nextLine(), DATETIME_FMT);
+
 
                 System.out.println("Enter the following information:");
                 System.out.print("Description:");
@@ -129,7 +127,7 @@ public class FinancialTracker {
                     scanner.nextLine();
                     continue;
                 }
-                transactions.add(new Transaction(date, time, description, vendor, numAmount));
+                transactions.add(new Transaction(dateTime, description, vendor, numAmount));
                 ledgerWriter(transactions);
                 break;
             }
@@ -145,9 +143,7 @@ public class FinancialTracker {
     private static void addPayment(Scanner scanner) throws IOException {
         while (true) {
             System.out.print("Enter the date and time of the deposit in the following format:\nyyyy-MM-dd HH:mm:ss :");
-            String dateTime = scanner.nextLine();
-            LocalDate date = LocalDate.parse(dateTime, DATE_FMT);
-            LocalTime time = LocalTime.parse(dateTime, TIME_FMT);
+            LocalDateTime dateTime = LocalDateTime.parse(scanner.nextLine(), DATETIME_FMT);
 
             System.out.println("Enter the following information:");
             System.out.print("Description:");
@@ -162,7 +158,7 @@ public class FinancialTracker {
                 continue;
             }
             numAmount = -numAmount;
-            transactions.add(new Transaction(date, time, description, vendor, numAmount));
+            transactions.add(new Transaction(dateTime, description, vendor, numAmount));
             ledgerWriter(transactions);
             break;
         }
@@ -199,11 +195,10 @@ public class FinancialTracker {
        Display helpers: show data in neat columns
        ------------------------------------------------------------------ */
     private static void displayLedger() {
-        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDate().compareTo(transaction1.getDate()));
+        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime().compareTo(transaction1.getDateTime()));
         for (Transaction transaction : transactions){
             System.out.println(transaction);
         }
-
     }
 
 
