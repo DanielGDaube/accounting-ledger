@@ -248,7 +248,7 @@ public class FinancialTracker {
         }
         newestSort();
         for (Transaction transaction : transactions){
-            if (findDate(transaction).getMonthValue() == month && findDate(transaction).getYear() == year){
+            if (transaction.getDate().getMonthValue() == month && transaction.getDate().getYear() == year){
                 columnPrint(transaction);
             }
         }
@@ -263,7 +263,7 @@ public class FinancialTracker {
         }
         oldestSort();
         for (Transaction transaction : transactions){
-            if (findDate(transaction).getYear() == year){
+            if (transaction.getDate().getYear() == year){
                 columnPrint(transaction);
             }
         }
@@ -283,11 +283,11 @@ public class FinancialTracker {
     // methods for filtering by different pieces of user entered data, used with custom search method
 
     private static boolean filterTransactionsByDate(LocalDate start, LocalDate end, Transaction transaction) {
-        if (start != null && findDate(transaction).isBefore(start)) {
+        if (start != null && transaction.getDate().isBefore(start)) {
             return false;
         }
 
-        if (end != null && findDate(transaction).isAfter(end)) {
+        if (end != null && transaction.getDate().isAfter(end)) {
             return false;
         }
             return true;
@@ -304,7 +304,7 @@ public class FinancialTracker {
         if (vendor.isBlank()) {
             return true;
         }
-            return findVendor(transaction).equalsIgnoreCase(vendor) || shortHand(findVendor(transaction)).equalsIgnoreCase(shortHand(vendor));
+            return transaction.getVendor().equalsIgnoreCase(vendor) || shortHand(transaction.getVendor()).equalsIgnoreCase(shortHand(vendor));
     }
 
     private static boolean filterTransactionsByAmount(String amount, Transaction transaction) {
@@ -357,16 +357,6 @@ public class FinancialTracker {
         else {
             return LocalDate.parse(s, DATE_FMT);
         }
-    }
-
-    // finds the date of a given transaction
-    private static LocalDate findDate(Transaction transaction){
-        return  transaction.getDateTime().toLocalDate();
-    }
-
-    // finds the vendor of a given transaction
-    private static String findVendor(Transaction transaction){
-        return transaction.getVendor();
     }
 
     // parses a string to a double
