@@ -8,6 +8,7 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 
@@ -242,7 +243,7 @@ public class FinancialTracker {
             switch (input) {
                 case "1" -> monthReport(1);
                 case "2" -> monthReport(2);
-                case "3" -> {/* TODO – year-to-date report   */ }
+                case "3" -> yearReport();
                 case "4" -> {/* TODO – previous year report  */ }
                 case "5" -> {/* TODO – prompt for vendor then report */ }
                 case "6" -> customSearch(scanner);
@@ -273,6 +274,17 @@ public class FinancialTracker {
                 columnPrint(transaction);
             }
         }
+    }
+
+    private static void yearReport(){
+        int year = LocalDate.now().getYear();
+        oldestSort();
+        for (Transaction transaction : transactions){
+            if (findYear(transaction) == year){
+                columnPrint(transaction);
+            }
+        }
+
     }
 
     private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
@@ -312,6 +324,10 @@ public class FinancialTracker {
     private static void newestSort(){
         Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime()
                 .compareTo(transaction1.getDateTime()));
+    }
+
+    private static void oldestSort(){
+        Collections.sort(transactions, Comparator.comparing(Transaction::getDateTime));
     }
 
     private static void ledgerWriter(ArrayList transactions) throws IOException {
