@@ -196,7 +196,7 @@ public class FinancialTracker {
        Display helpers: show data in neat columns
        ------------------------------------------------------------------ */
     private static void displayLedger() {
-        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime().compareTo(transaction1.getDateTime()));
+        newestSort();
         for (Transaction transaction : transactions){
             columnPrint(transaction);
         }
@@ -204,7 +204,7 @@ public class FinancialTracker {
 
 
     private static void displayDeposits() {
-        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime().compareTo(transaction1.getDateTime()));
+        newestSort();
         for (Transaction transaction : transactions) {
             if (transaction.getAmount() > 0){
                 columnPrint(transaction);
@@ -213,7 +213,7 @@ public class FinancialTracker {
     }
 
     private static void displayPayments() {
-        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime().compareTo(transaction1.getDateTime()));
+        newestSort();
         for (Transaction transaction : transactions) {
             if (transaction.getAmount() < 0){
                 columnPrint(transaction);
@@ -257,7 +257,7 @@ public class FinancialTracker {
        ------------------------------------------------------------------ */
     private static void monthToDateReport(){
         Month currentMonth = LocalDate.now().getMonth();
-        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime().compareTo(transaction1.getDateTime()));
+        newestSort();
         for (Transaction transaction : transactions){
             if (findMonth(transaction) == currentMonth){
                 columnPrint(transaction);
@@ -267,7 +267,7 @@ public class FinancialTracker {
 
     private static void previousMonthReport(){
         int previousMonth = LocalDate.now().getMonthValue()-1;
-        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime().compareTo(transaction1.getDateTime()));
+        newestSort();
         for (Transaction transaction : transactions){
             if (findMonth(transaction).getValue() == previousMonth){
                 columnPrint(transaction);
@@ -304,6 +304,12 @@ public class FinancialTracker {
         /* TODO – return Double   or null */
         return null;
     }
+
+    private static void newestSort(){
+        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime()
+                .compareTo(transaction1.getDateTime()));
+    }
+
     private static void ledgerWriter(ArrayList transactions) throws IOException {
         BufferedWriter ledgerWriter = new BufferedWriter(new FileWriter(FILE_NAME, true));
         ledgerWriter.write(transactions.get(transactions.size()-1).toString());
