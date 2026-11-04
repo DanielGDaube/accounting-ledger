@@ -267,6 +267,7 @@ public class FinancialTracker {
                 month -= 1;
             }
         }
+        newestSort();
         for (Transaction transaction : transactions){
             if (findMonthValue(transaction) == month && findYear(transaction) == year){
                 columnPrint(transaction);
