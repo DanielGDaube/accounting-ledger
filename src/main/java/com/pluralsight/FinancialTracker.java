@@ -10,17 +10,6 @@ import java.util.Comparator;
 import java.util.Scanner;
 
 
-
-/*
- * Capstone skeleton – personal finance tracker.
- * ------------------------------------------------
- * File format  (pipe-delimited)
- *     yyyy-MM-dd|HH:mm:ss|description|vendor|amount
- * A deposit has a positive amount; a payment is stored
- * as a negative amount.
- *
-
- */
 public class FinancialTracker {
 
     /* ------------------------------------------------------------------
@@ -40,6 +29,8 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Main menu
        ------------------------------------------------------------------ */
+
+    // displays the main menu and lets the user add a transaction or go to the ledger menu
     public static void main(String[] args) throws InterruptedException {
         loadTransactions(FILE_NAME);
 
@@ -72,11 +63,9 @@ public class FinancialTracker {
        File I/O
        ------------------------------------------------------------------ */
 
-    /**
-     * Load transactions from FILE_NAME.
-     * • If the file doesn’t exist, create an empty one so that future writes succeed.
-     * • Each line looks like: date|time|description|vendor|amount
-     */
+    // loads transactions from transactions.csv
+    // creates a new Transactions object from the information
+    // stores the object in an array list
     public static void loadTransactions(String fileName) {
 
         try{
@@ -103,6 +92,10 @@ public class FinancialTracker {
        Add new transactions
        ------------------------------------------------------------------ */
 
+    /* ask the user to enter transaction info
+    adds a new Transactions object to the array list then writes the Transaction to transactions.csv
+    if the user selected add deposit, transaction is listed with a positive number
+    if the user selected add payment, transaction is listed with a negative number */
     private static void addTransaction(Scanner scanner, int transactionType) throws InterruptedException {
         while (true) {
             try {
@@ -140,6 +133,8 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Ledger menu
        ------------------------------------------------------------------ */
+
+    // displays ledger menu and lets the user choose what transactions to view or go to the report menu for more filter options
     private static void ledgerMenu(Scanner scanner) throws InterruptedException {
         boolean running = true;
         while (running) {
@@ -167,6 +162,9 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Display helpers: show data in neat columns
        ------------------------------------------------------------------ */
+    // all 3 display from newest to oldest
+
+    // displays every transaction
     private static void displayLedger() {
         newestSort();
         for (Transaction transaction : transactions){
@@ -174,7 +172,7 @@ public class FinancialTracker {
         }
     }
 
-
+    // displays only deposits (transactions with a positive number)
     private static void displayDeposits() {
         newestSort();
         for (Transaction transaction : transactions) {
@@ -184,6 +182,7 @@ public class FinancialTracker {
         }
     }
 
+    // displays only payments (transactions with a negative number)
     private static void displayPayments() {
         newestSort();
         for (Transaction transaction : transactions) {
@@ -196,6 +195,8 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Reports menu
        ------------------------------------------------------------------ */
+
+    // displays reports menu and lets the user select desired report type
     private static void reportsMenu(Scanner scanner) throws InterruptedException {
         boolean running = true;
         while (running) {
@@ -230,6 +231,9 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Reporting helpers
        ------------------------------------------------------------------ */
+
+    // if the user selected month-to-date, displays all transactions from the current month
+    // if the user selected previous month, displays all transactions from the previous month
     private static void monthReport(int reportType){
         int year = LocalDate.now().getYear();
         int month = LocalDate.now().getMonthValue();
@@ -250,6 +254,8 @@ public class FinancialTracker {
         }
     }
 
+    // if the user selected year-to-date, displays all transactions from the current year
+    // if the user selected previous year, displays all transactions from the previous year
     private static void yearReport(int reportType){
         int year = LocalDate.now().getYear();
         if (reportType == 2){
@@ -264,6 +270,7 @@ public class FinancialTracker {
 
     }
 
+    // prints reports matching the user entered vendor name
     private static void vendorReport(String vendor){
         newestSort();
         for (Transaction transaction : transactions){
@@ -273,6 +280,7 @@ public class FinancialTracker {
         }
     }
 
+    // methods for filtering by different pieces of user entered data, used with custom search method
 
     private static boolean filterTransactionsByDate(LocalDate start, LocalDate end, Transaction transaction) {
         if (start != null && findDate(transaction).isBefore(start)) {
@@ -306,6 +314,9 @@ public class FinancialTracker {
             return Math.abs(transaction.getAmount()) == parseDouble(amount);
     }
 
+    // prompts the user for transaction data and runs the data through filters
+    // prints only transactions that match all given data
+    // if a filter is left blank it is considered valid for all transactions
     private static void customSearch(Scanner scanner) throws InterruptedException {
         try {
             System.out.println("Please enter the following filters to narrow search, or leave blank to ignore filter");
@@ -338,6 +349,7 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Utility parsers (you can reuse in many places)
        ------------------------------------------------------------------ */
+    // parses a string to LocalDate
     private static LocalDate parseDate(String s) {
         if (s.isEmpty()) {
             return null;
@@ -347,14 +359,17 @@ public class FinancialTracker {
         }
     }
 
+    // finds the date of a given transaction
     private static LocalDate findDate(Transaction transaction){
         return  transaction.getDateTime().toLocalDate();
     }
 
+    // finds the vendor of a given transaction
     private static String findVendor(Transaction transaction){
         return transaction.getVendor();
     }
 
+    // parses a string to a double
     private static Double parseDouble(String s) {
         if (s.isEmpty()) {
             return null;
@@ -364,6 +379,7 @@ public class FinancialTracker {
         }
     }
 
+    // returns a shortened vendor name for easier filter matching
     private static String shortHand(String vendor){
         if (vendor.contains(" ")){
             int spaceIndex = vendor.indexOf(' ');
@@ -375,26 +391,31 @@ public class FinancialTracker {
         return vendor;
     }
 
+    // sorts array list from latest date to oldest date
     private static void newestSort(){
         transactions.sort((transaction1, transaction2) -> transaction2.getDateTime()
                 .compareTo(transaction1.getDateTime()));
     }
 
+    // sorts array list from oldest date to latest date
     private static void oldestSort(){
         transactions.sort(Comparator.comparing(Transaction::getDateTime));
     }
 
+    // writes most recent array list object to transactions.csv
     private static void ledgerWriter(ArrayList transactions) throws IOException {
         BufferedWriter ledgerWriter = new BufferedWriter(new FileWriter(FILE_NAME, true));
         ledgerWriter.write(transactions.get(transactions.size()-1).toString());
         ledgerWriter.write("\n");
         ledgerWriter.close();
     }
+    // prints Transaction objects with formatting to line up on | delimiters
     private static void columnPrint(Transaction transaction){
         System.out.printf("%-10tF|%-8tT|%-30s|%-20s|%.2f%n", transaction.getDate(), transaction.getTime(), transaction.getDescription(),
                 transaction.getVendor(), transaction.getAmount());
     }
 
+    // prints an error message
     private static void menuError() throws InterruptedException {
         System.err.println("\nInvalid option!");
         Thread.sleep(900);
