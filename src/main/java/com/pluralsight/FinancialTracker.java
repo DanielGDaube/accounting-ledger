@@ -240,8 +240,8 @@ public class FinancialTracker {
             String input = scanner.nextLine().trim();
 
             switch (input) {
-                case "1" -> monthToDateReport();
-                case "2" -> previousMonthReport();
+                case "1" -> monthReport(1);
+                case "2" -> monthReport(2);
                 case "3" -> {/* TODO – year-to-date report   */ }
                 case "4" -> {/* TODO – previous year report  */ }
                 case "5" -> {/* TODO – prompt for vendor then report */ }
@@ -261,6 +261,25 @@ public class FinancialTracker {
         newestSort();
         for (Transaction transaction : transactions){
             if (findMonthValue(transaction) == currentMonth && findYear(transaction) == year){
+                columnPrint(transaction);
+            }
+        }
+    }
+
+    private static void monthReport(int reportType){
+        int year = LocalDate.now().getYear();
+        int month = LocalDate.now().getMonthValue();
+        if (reportType == 2) {
+            if (month == 1){
+                year -= 1;
+                month = 12;
+            }
+            else {
+                month -= 1;
+            }
+        }
+        for (Transaction transaction : transactions){
+            if (findMonthValue(transaction) == month && findYear(transaction) == year){
                 columnPrint(transaction);
             }
         }
