@@ -58,8 +58,8 @@ public class FinancialTracker {
             String input = scanner.nextLine().trim();
 
             switch (input.toUpperCase()) {
-                case "D" -> addDeposit(scanner);
-                case "P" -> addPayment(scanner);
+                case "D" -> addTransaction(scanner,1);
+                case "P" -> addTransaction(scanner,2);
                 case "L" -> ledgerMenu(scanner);
                 case "X" -> running = false;
                 default -> menuError();
@@ -137,6 +137,39 @@ public class FinancialTracker {
                 }
 
             }
+    }
+
+    private static void addTransaction(Scanner scanner, int transactionType) throws InterruptedException {
+        while (true) {
+            try {
+                System.out.print("\nEnter the date and time of the deposit in the following format\nyyyy-MM-dd HH:mm:ss :");
+                LocalDateTime dateTime = LocalDateTime.parse(scanner.nextLine(), DATETIME_FMT);
+
+                System.out.println("Enter the following information:");
+                System.out.print("Description:");
+                String description = scanner.nextLine();
+                System.out.print("Vendor:");
+                String vendor = scanner.nextLine();
+                System.out.print("Amount:");
+                double numAmount = scanner.nextDouble();
+                if (numAmount < 0) {
+                    System.err.println("Inputted amount cannot be negative or 0!");
+                    Thread.sleep(700);
+                    scanner.nextLine();
+                    continue;
+                }
+                if (transactionType == 2){
+                    numAmount = -Math.abs(numAmount);
+                }
+                transactions.add(new Transaction(dateTime, description, vendor, numAmount));
+                ledgerWriter(transactions);
+                break;
+            }
+            catch (Exception e){
+                menuError();
+            }
+
+        }
     }
 
     /**
@@ -309,6 +342,7 @@ public class FinancialTracker {
             }
         }
     }
+
 
     private static boolean filterTransactionsByDate(LocalDate start, LocalDate end, Transaction transaction) {
         if (start != null && findDate(transaction).isBefore(start)) {
