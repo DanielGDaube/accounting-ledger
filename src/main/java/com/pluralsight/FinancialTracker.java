@@ -103,42 +103,6 @@ public class FinancialTracker {
        Add new transactions
        ------------------------------------------------------------------ */
 
-    /**
-     * Prompt for ONE date+time string in the format
-     * "yyyy-MM-dd HH:mm:ss", plus description, vendor, amount.
-     * Validate that the amount entered is positive.
-     * Store the amount as-is (positive) and append to the file.
-     */
-    private static void addDeposit(Scanner scanner) throws InterruptedException {
-            while (true) {
-                try {
-                    System.out.print("\nEnter the date and time of the deposit in the following format\nyyyy-MM-dd HH:mm:ss :");
-                    LocalDateTime dateTime = LocalDateTime.parse(scanner.nextLine(), DATETIME_FMT);
-
-                    System.out.println("Enter the following information:");
-                    System.out.print("Description:");
-                    String description = scanner.nextLine();
-                    System.out.print("Vendor:");
-                    String vendor = scanner.nextLine();
-                    System.out.print("Amount:");
-                    double numAmount = scanner.nextDouble();
-                    if (numAmount < 0) {
-                        System.err.println("Inputted amount cannot be negative or 0!");
-                        Thread.sleep(700);
-                        scanner.nextLine();
-                        continue;
-                    }
-                    transactions.add(new Transaction(dateTime, description, vendor, numAmount));
-                    ledgerWriter(transactions);
-                    break;
-                }
-                catch (Exception e){
-                    menuError();
-                }
-
-            }
-    }
-
     private static void addTransaction(Scanner scanner, int transactionType) throws InterruptedException {
         while (true) {
             try {
@@ -151,7 +115,7 @@ public class FinancialTracker {
                 System.out.print("Vendor:");
                 String vendor = scanner.nextLine();
                 System.out.print("Amount:");
-                double numAmount = scanner.nextDouble();
+                double numAmount = parseDouble(scanner.nextLine());
                 if (numAmount < 0) {
                     System.err.println("Inputted amount cannot be negative or 0!");
                     Thread.sleep(700);
@@ -172,40 +136,6 @@ public class FinancialTracker {
         }
     }
 
-    /**
-     * Same prompts as addDeposit.
-     * Amount must be entered as a positive number,
-     * then converted to a negative amount before storing.
-     */
-    private static void addPayment(Scanner scanner) throws InterruptedException {
-        while (true) {
-            try {
-                System.out.print("Enter the date and time of the deposit in the following format:\nyyyy-MM-dd HH:mm:ss :");
-                LocalDateTime dateTime = LocalDateTime.parse(scanner.nextLine(), DATETIME_FMT);
-
-                System.out.println("Enter the following information:");
-                System.out.print("Description:");
-                String description = scanner.nextLine();
-                System.out.print("Vendor:");
-                String vendor = scanner.nextLine();
-                System.out.print("Amount:");
-                double numAmount = scanner.nextDouble();
-                if (numAmount < 0) {
-                    System.err.println("Inputted amount cannot be negative or 0!");
-                    Thread.sleep(700);
-                    scanner.nextLine();
-                    continue;
-                }
-                numAmount = -numAmount;
-                transactions.add(new Transaction(dateTime, description, vendor, numAmount));
-                ledgerWriter(transactions);
-                break;
-            }
-            catch (Exception e){
-                menuError();
-            }
-        }
-    }
 
     /* ------------------------------------------------------------------
        Ledger menu
