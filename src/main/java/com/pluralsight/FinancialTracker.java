@@ -241,7 +241,7 @@ public class FinancialTracker {
 
             switch (input) {
                 case "1" -> monthToDateReport();
-                case "2" -> {/* TODO – previous month report */ }
+                case "2" -> previousMonthReport();
                 case "3" -> {/* TODO – year-to-date report   */ }
                 case "4" -> {/* TODO – previous year report  */ }
                 case "5" -> {/* TODO – prompt for vendor then report */ }
@@ -260,6 +260,16 @@ public class FinancialTracker {
         Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime().compareTo(transaction1.getDateTime()));
         for (Transaction transaction : transactions){
             if (findMonth(transaction) == currentMonth){
+                columnPrint(transaction);
+            }
+        }
+    }
+
+    private static void previousMonthReport(){
+        int previousMonth = LocalDate.now().getMonthValue()-1;
+        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime().compareTo(transaction1.getDateTime()));
+        for (Transaction transaction : transactions){
+            if (findMonth(transaction).getValue() == previousMonth){
                 columnPrint(transaction);
             }
         }
