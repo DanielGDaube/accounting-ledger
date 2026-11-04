@@ -255,17 +255,6 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Reporting helpers
        ------------------------------------------------------------------ */
-    private static void monthToDateReport(){
-        int year = LocalDate.now().getYear();
-        int currentMonth = LocalDate.now().getMonthValue();
-        newestSort();
-        for (Transaction transaction : transactions){
-            if (findMonthValue(transaction) == currentMonth && findYear(transaction) == year){
-                columnPrint(transaction);
-            }
-        }
-    }
-
     private static void monthReport(int reportType){
         int year = LocalDate.now().getYear();
         int month = LocalDate.now().getMonthValue();
@@ -283,27 +272,6 @@ public class FinancialTracker {
                 columnPrint(transaction);
             }
         }
-    }
-
-    private static void previousMonthReport(){
-        int year;
-        int previousMonth;
-        if (LocalDate.now().getMonthValue() == 1){
-            year = LocalDate.now().getYear()-1;
-            previousMonth = 12;
-        }
-        else {
-            year = LocalDate.now().getYear();
-            previousMonth = LocalDate.now().getMonthValue()-1;
-        }
-        newestSort();
-        for (Transaction transaction : transactions){
-            if (findMonthValue(transaction) == previousMonth && findYear(transaction) == year){
-                columnPrint(transaction);
-            }
-
-        }
-
     }
 
     private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
