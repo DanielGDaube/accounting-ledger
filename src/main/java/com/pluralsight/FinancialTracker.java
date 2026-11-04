@@ -245,7 +245,10 @@ public class FinancialTracker {
                 case "2" -> monthReport(2);
                 case "3" -> yearReport(1);
                 case "4" -> yearReport(2);
-                case "5" -> {/* TODO – prompt for vendor then report */ }
+                case "5" -> {
+                    System.out.print("Enter vendor name:");
+                    filterTransactionsByVendor(scanner.nextLine());
+                }
                 case "6" -> customSearch(scanner);
                 case "0" -> running = false;
                 default -> System.out.println("Invalid option");
@@ -295,7 +298,12 @@ public class FinancialTracker {
     }
 
     private static void filterTransactionsByVendor(String vendor) {
-        // TODO – iterate transactions, print those with matching vendor
+        newestSort();
+        for (Transaction transaction : transactions){
+            if (findVendor(transaction).equalsIgnoreCase(vendor) || shortHand(findVendor(transaction)).equalsIgnoreCase(shortHand(vendor))){
+                columnPrint(transaction);
+            }
+        }
     }
 
     private static void customSearch(Scanner scanner) {
@@ -319,9 +327,24 @@ public class FinancialTracker {
         return transaction.getDateTime().getMonthValue();
     }
 
+    private static String findVendor(Transaction transaction){
+        return transaction.getVendor();
+    }
+
     private static Double parseDouble(String s) {
         /* TODO – return Double   or null */
         return null;
+    }
+
+    private static String shortHand(String vendor){
+        if (vendor.contains(" ")){
+            int spaceIndex = vendor.indexOf(' ');
+            vendor = vendor.substring(0, spaceIndex);
+        }
+        if (vendor.contains("'")){
+            vendor = vendor.replace("'","");
+        }
+        return vendor;
     }
 
     private static void newestSort(){
