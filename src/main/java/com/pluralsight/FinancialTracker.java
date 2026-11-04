@@ -302,19 +302,35 @@ public class FinancialTracker {
     }
 
     private static boolean filterTransactionsByDate(LocalDate start, LocalDate end, Transaction transaction) {
-        return findDate(transaction).isAfter(start) && !findDate(transaction).isAfter(end);
+        if (start != null && findDate(transaction).isBefore(start)) {
+            return false;
+        }
+
+        if (end != null && findDate(transaction).isAfter(end)) {
+            return false;
+        }
+            return true;
     }
 
     private static boolean filterTransactionsByDescription(String description, Transaction transaction) {
-        return transaction.getDescription().equalsIgnoreCase(description);
+        if (description.isBlank()) {
+            return true;
+        }
+            return transaction.getDescription().equalsIgnoreCase(description);
     }
 
     private static boolean filterTransactionsByVendor(String vendor, Transaction transaction) {
-        return findVendor(transaction).equalsIgnoreCase(vendor) || shortHand(findVendor(transaction)).equalsIgnoreCase(shortHand(vendor));
+        if (vendor.isBlank()) {
+            return true;
+        }
+            return findVendor(transaction).equalsIgnoreCase(vendor) || shortHand(findVendor(transaction)).equalsIgnoreCase(shortHand(vendor));
     }
 
-    private static boolean filterTransactionsByAmount(double amount, Transaction transaction) {
-        return transaction.getAmount() == amount;
+    private static boolean filterTransactionsByAmount(String amount, Transaction transaction) {
+        if (amount.isBlank()) {
+            return true;
+        }
+            return Math.abs(transaction.getAmount()) == parseDouble(amount);
     }
 
     private static void customSearch(Scanner scanner) {
@@ -328,8 +344,17 @@ public class FinancialTracker {
         System.out.print("Vendor:");
         String vendor = scanner.nextLine();
         System.out.print("Amount:");
-        double amount = parseDouble(scanner.nextLine());
+        String amount = scanner.nextLine();
 
+        for (Transaction transaction: transactions){
+            if (filterTransactionsByDate(start,end,transaction)
+                    && filterTransactionsByDescription(description, transaction)
+                    && filterTransactionsByVendor(vendor,transaction)
+                    && filterTransactionsByAmount(amount, transaction)){
+                columnPrint(transaction);
+
+            }
+        }
 
     }
 
