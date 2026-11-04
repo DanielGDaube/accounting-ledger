@@ -1,4 +1,4 @@
-# Project Title
+# Accounting Ledger
 
 <!-- HOW TO USE THIS TEMPLATE
      Save it as README.md at the root of your project, next to pom.xml. Replace every comment like this one
@@ -6,10 +6,16 @@
      Two sections are optional and say so: Class Diagram, and Data and configuration. When your project does not
      need one, delete the whole section, heading included. Every other section stays. -->
 
+Ledger program that reads and writes transactions
+to a csv file and prints reports
 <!-- One sentence under the title: what the app is, for whom.
      Example: A console app that keeps a store's inventory in a csv file and lets a clerk search it. -->
 
 ## Description of the Project
+Accounting Ledger is an application for employees of a company
+that lets them view and add transactions. When viewing, users have 
+several different options for filtering through the transactions.
+Added transactions are saved between sessions by using the csv file.
 
 <!-- Three to five sentences. What the application does, who uses it, what problem it solves.
      Write it for someone who has never seen the workbook: a recruiter, a classmate, you in six months. -->
@@ -24,9 +30,12 @@
      - Shows every product in the store
      - Searches products by name (bonus) -->
 
--
--
--
+- Adds deposit and payment transactions
+- Shows all transactions, newest first
+- Shows deposits only
+- Shows payments only
+- Shows transactions filtered by current month, current year, previous month, or previous year
+- Shows transactions filtered by user defined filters (bonus)
 
 ## User Stories
 
@@ -34,8 +43,14 @@
      As a [type of user], I want [some goal] so that [some reason].
      Same text as the cards on your GitHub project board. -->
 
-- As a ..., I want ..., so that ...
-- As a ..., I want ..., so that ...
+- As a user, I want to add a deposit with its date, description, vendor and amount,  so that the money I received is saved in my ledger.
+- As a user I want to input my desired payment amount so that I can pay exactly how much I want.
+- As a user I want new entries to show first so I can quickly check to make sure everything is up to date.
+- As a user I want to filter by deposits so that I can see all deposits without having to look through payments.
+- As a user I want to filter by payments so that I can see all payments without having to look through deposits.
+- As a user I want to be able to sort reports by month-to-date, previous month, year-to-date, and previous year so that I can search for payments and deposits within different time frames.
+- As a user I want to search vendor by name so that I can keep track of a specific vendors deposits and payments.
+- As a user I want to search for entries between a certain start and end date so that I can see deposits and payments within a specified time frame.
 
 ## Setup
 
@@ -61,7 +76,7 @@
      - `inventory.csv` sits at the project root, next to `pom.xml`. The program reads it at start.
      - `logs.txt` is created by the program at the project root on the first run. -->
 
--
+- `transactions.csv` sits at the project root, next to `pom.xml`. The program reads it at start.
 
 ## Technologies Used
 
