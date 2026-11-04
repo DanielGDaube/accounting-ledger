@@ -256,20 +256,22 @@ public class FinancialTracker {
        Reporting helpers
        ------------------------------------------------------------------ */
     private static void monthToDateReport(){
+        int year = LocalDate.now().getYear();
         int currentMonth = LocalDate.now().getMonthValue();
         newestSort();
         for (Transaction transaction : transactions){
-            if (findMonthValue(transaction) == currentMonth){
+            if (findMonthValue(transaction) == currentMonth && findYear(transaction) == year){
                 columnPrint(transaction);
             }
         }
     }
 
     private static void previousMonthReport(){
+        int year = LocalDate.now().getYear();
         int previousMonth = LocalDate.now().getMonthValue()-1;
         newestSort();
         for (Transaction transaction : transactions){
-            if (findMonthValue(transaction) == previousMonth){
+            if (findMonthValue(transaction) == previousMonth && findYear(transaction) == year){
                 columnPrint(transaction);
             }
         }
