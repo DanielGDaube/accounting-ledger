@@ -11,6 +11,11 @@ import java.util.Scanner;
 
 
 public class FinancialTracker {
+    // ANSI colors for printing colored text
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\033[1;30m";
+    public static final String ANSI_GREEN_BACKGROUND = "\033[0;102m";
+    public static final String ANSI_RED_BACKGROUND = "\033[0;101m";
 
     /* ------------------------------------------------------------------
        Shared data and formatters
@@ -400,9 +405,16 @@ public class FinancialTracker {
         ledgerWriter.close();
     }
     // prints Transaction objects with formatting to line up on | delimiters
-    private static void columnPrint(Transaction transaction){
-        System.out.printf("%-10tF|%-8tT|%-30s|%-20s|%.2f%n", transaction.getDate(), transaction.getTime(), transaction.getDescription(),
-                transaction.getVendor(), transaction.getAmount());
+    // deposits print in green, payments print in red
+    private static void columnPrint(Transaction transaction) {
+        if (transaction.getAmount() > 0) {
+            System.out.printf(ANSI_GREEN_BACKGROUND + ANSI_BLACK + "%-10tF|%-8tT|%-30s|%-20s|%-8.2f" + ANSI_RESET + "%n",
+                    transaction.getDate(), transaction.getTime(), transaction.getDescription(), transaction.getVendor(), transaction.getAmount());
+        }
+        else {
+            System.out.printf(ANSI_RED_BACKGROUND + ANSI_BLACK + "%-10tF|%-8tT|%-30s|%-20s|%-8.2f" + ANSI_RESET + "%n",
+                    transaction.getDate(), transaction.getTime(), transaction.getDescription(), transaction.getVendor(), transaction.getAmount());
+        }
     }
 
     // prints an error message
