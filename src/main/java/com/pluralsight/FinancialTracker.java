@@ -272,7 +272,7 @@ public class FinancialTracker {
         }
         newestSort();
         for (Transaction transaction : transactions){
-            if (findMonthValue(transaction) == month && findYear(transaction) == year){
+            if (findDate(transaction).getMonthValue() == month && findDate(transaction).getYear() == year){
                 columnPrint(transaction);
             }
         }
@@ -285,7 +285,7 @@ public class FinancialTracker {
         }
         oldestSort();
         for (Transaction transaction : transactions){
-            if (findYear(transaction) == year){
+            if (findDate(transaction).getYear() == year){
                 columnPrint(transaction);
             }
         }
@@ -337,12 +337,8 @@ public class FinancialTracker {
         }
     }
 
-    private static int findYear(Transaction transaction){
-        return transaction.getDateTime().getYear();
-    }
-
-    private static int findMonthValue(Transaction transaction){
-        return transaction.getDateTime().getMonthValue();
+    private static LocalDate findDate(Transaction transaction){
+        return  transaction.getDateTime().toLocalDate();
     }
 
     private static String findVendor(Transaction transaction){
