@@ -4,7 +4,6 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -247,7 +246,7 @@ public class FinancialTracker {
                 case "4" -> yearReport(2);
                 case "5" -> {
                     System.out.print("Enter vendor name:");
-                    filterTransactionsByVendor(scanner.nextLine());
+                    vendorReport(scanner.nextLine());
                 }
                 case "6" -> customSearch(scanner);
                 case "0" -> running = false;
@@ -293,30 +292,49 @@ public class FinancialTracker {
 
     }
 
-    private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
-        // TODO – iterate transactions, print those within the range
-    }
-
-    private static void filterTransactionsByVendor(String vendor) {
+    private static void vendorReport(String vendor){
         newestSort();
         for (Transaction transaction : transactions){
-            if (findVendor(transaction).equalsIgnoreCase(vendor) || shortHand(findVendor(transaction)).equalsIgnoreCase(shortHand(vendor))){
+            if (filterTransactionsByVendor(vendor, transaction)) {
                 columnPrint(transaction);
             }
         }
     }
 
+    private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
+        // TODO – iterate transactions, print those within the range
+    }
+
+    private static boolean filterTransactionsByVendor(String vendor, Transaction transaction) {
+        return findVendor(transaction).equalsIgnoreCase(vendor) || shortHand(findVendor(transaction)).equalsIgnoreCase(shortHand(vendor));
+    }
+
     private static void customSearch(Scanner scanner) {
-        // TODO – prompt for any combination of date range, description,
-        //        vendor, and exact amount, then display matches
+        System.out.println("Please enter the following filters to narrow search, or leave blank to ignore filter");
+        System.out.print("Start Date:");
+        LocalDate start = parseDate(scanner.nextLine());
+        System.out.print("End Date:");
+        LocalDate end = parseDate(scanner.nextLine());
+        System.out.print("Description:");
+        String description = scanner.nextLine();
+        System.out.print("Vendor:");
+        String vendor = scanner.nextLine();
+        System.out.print("Amount:");
+        double amount = parseDouble(scanner.nextLine());
+
+        filterTransactionsByDate(start,end);
     }
 
     /* ------------------------------------------------------------------
        Utility parsers (you can reuse in many places)
        ------------------------------------------------------------------ */
     private static LocalDate parseDate(String s) {
-        /* TODO – return LocalDate or null */
-        return null;
+        if (s.isEmpty()) {
+            return null;
+        }
+        else {
+            return LocalDate.parse(s, DATE_FMT);
+        }
     }
 
     private static int findYear(Transaction transaction){
@@ -332,8 +350,12 @@ public class FinancialTracker {
     }
 
     private static Double parseDouble(String s) {
-        /* TODO – return Double   or null */
-        return null;
+        if (s.isEmpty()) {
+            return null;
+        }
+        else {
+            return Double.parseDouble(s);
+        }
     }
 
     private static String shortHand(String vendor){
