@@ -41,7 +41,7 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Main menu
        ------------------------------------------------------------------ */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         loadTransactions(FILE_NAME);
 
 
@@ -63,7 +63,7 @@ public class FinancialTracker {
                 case "P" -> addPayment(scanner);
                 case "L" -> ledgerMenu(scanner);
                 case "X" -> running = false;
-                default -> System.out.println("Invalid option");
+                default -> menuError();
             }
         }
         scanner.close();
@@ -110,11 +110,46 @@ public class FinancialTracker {
      * Validate that the amount entered is positive.
      * Store the amount as-is (positive) and append to the file.
      */
-    private static void addDeposit(Scanner scanner) throws IOException {
+    private static void addDeposit(Scanner scanner) throws InterruptedException {
             while (true) {
+                try {
+                    System.out.print("\nEnter the date and time of the deposit in the following format\nyyyy-MM-dd HH:mm:ss :");
+                    LocalDateTime dateTime = LocalDateTime.parse(scanner.nextLine(), DATETIME_FMT);
+
+                    System.out.println("Enter the following information:");
+                    System.out.print("Description:");
+                    String description = scanner.nextLine();
+                    System.out.print("Vendor:");
+                    String vendor = scanner.nextLine();
+                    System.out.print("Amount:");
+                    double numAmount = scanner.nextDouble();
+                    if (numAmount < 0) {
+                        System.err.println("Inputted amount cannot be negative or 0!");
+                        Thread.sleep(700);
+                        scanner.nextLine();
+                        continue;
+                    }
+                    transactions.add(new Transaction(dateTime, description, vendor, numAmount));
+                    ledgerWriter(transactions);
+                    break;
+                }
+                catch (Exception e){
+                    menuError();
+                }
+
+            }
+    }
+
+    /**
+     * Same prompts as addDeposit.
+     * Amount must be entered as a positive number,
+     * then converted to a negative amount before storing.
+     */
+    private static void addPayment(Scanner scanner) throws IOException, InterruptedException {
+        while (true) {
+            try {
                 System.out.print("Enter the date and time of the deposit in the following format:\nyyyy-MM-dd HH:mm:ss :");
                 LocalDateTime dateTime = LocalDateTime.parse(scanner.nextLine(), DATETIME_FMT);
-
 
                 System.out.println("Enter the following information:");
                 System.out.print("Description:");
@@ -124,51 +159,26 @@ public class FinancialTracker {
                 System.out.print("Amount:");
                 double numAmount = scanner.nextDouble();
                 if (numAmount < 0) {
-                    System.out.println("Inputted amount cannot be negative or 0!");
+                    System.err.println("Inputted amount cannot be negative or 0!");
+                    Thread.sleep(700);
                     scanner.nextLine();
                     continue;
                 }
+                numAmount = -numAmount;
                 transactions.add(new Transaction(dateTime, description, vendor, numAmount));
                 ledgerWriter(transactions);
                 break;
             }
-
-
-    }
-
-    /**
-     * Same prompts as addDeposit.
-     * Amount must be entered as a positive number,
-     * then converted to a negative amount before storing.
-     */
-    private static void addPayment(Scanner scanner) throws IOException {
-        while (true) {
-            System.out.print("Enter the date and time of the deposit in the following format:\nyyyy-MM-dd HH:mm:ss :");
-            LocalDateTime dateTime = LocalDateTime.parse(scanner.nextLine(), DATETIME_FMT);
-
-            System.out.println("Enter the following information:");
-            System.out.print("Description:");
-            String description = scanner.nextLine();
-            System.out.print("Vendor:");
-            String vendor = scanner.nextLine();
-            System.out.print("Amount:");
-            double numAmount = scanner.nextDouble();
-            if (numAmount < 0) {
-                System.out.println("Inputted amount cannot be negative or 0!");
-                scanner.nextLine();
-                continue;
+            catch (Exception e){
+                menuError();
             }
-            numAmount = -numAmount;
-            transactions.add(new Transaction(dateTime, description, vendor, numAmount));
-            ledgerWriter(transactions);
-            break;
         }
     }
 
     /* ------------------------------------------------------------------
        Ledger menu
        ------------------------------------------------------------------ */
-    private static void ledgerMenu(Scanner scanner) {
+    private static void ledgerMenu(Scanner scanner) throws InterruptedException {
         boolean running = true;
         while (running) {
             System.out.println("Ledger");
@@ -187,7 +197,7 @@ public class FinancialTracker {
                 case "P" -> displayPayments();
                 case "R" -> reportsMenu(scanner);
                 case "H" -> running = false;
-                default -> System.out.println("Invalid option");
+                default -> menuError();
             }
         }
     }
@@ -224,7 +234,7 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Reports menu
        ------------------------------------------------------------------ */
-    private static void reportsMenu(Scanner scanner) {
+    private static void reportsMenu(Scanner scanner) throws InterruptedException {
         boolean running = true;
         while (running) {
             System.out.println("Reports");
@@ -250,7 +260,7 @@ public class FinancialTracker {
                 }
                 case "6" -> customSearch(scanner);
                 case "0" -> running = false;
-                default -> System.out.println("Invalid option");
+                default -> menuError();
             }
         }
     }
@@ -333,29 +343,33 @@ public class FinancialTracker {
             return Math.abs(transaction.getAmount()) == parseDouble(amount);
     }
 
-    private static void customSearch(Scanner scanner) {
-        System.out.println("Please enter the following filters to narrow search, or leave blank to ignore filter");
-        System.out.print("Start Date:");
-        LocalDate start = parseDate(scanner.nextLine());
-        System.out.print("End Date:");
-        LocalDate end = parseDate(scanner.nextLine());
-        System.out.print("Description:");
-        String description = scanner.nextLine();
-        System.out.print("Vendor:");
-        String vendor = scanner.nextLine();
-        System.out.print("Amount:");
-        String amount = scanner.nextLine();
+    private static void customSearch(Scanner scanner) throws InterruptedException {
+        try {
+            System.out.println("Please enter the following filters to narrow search, or leave blank to ignore filter");
+            System.out.print("Start Date:");
+            LocalDate start = parseDate(scanner.nextLine());
+            System.out.print("End Date:");
+            LocalDate end = parseDate(scanner.nextLine());
+            System.out.print("Description:");
+            String description = scanner.nextLine();
+            System.out.print("Vendor:");
+            String vendor = scanner.nextLine();
+            System.out.print("Amount:");
+            String amount = scanner.nextLine();
 
-        for (Transaction transaction: transactions){
-            if (filterTransactionsByDate(start,end,transaction)
-                    && filterTransactionsByDescription(description, transaction)
-                    && filterTransactionsByVendor(vendor,transaction)
-                    && filterTransactionsByAmount(amount, transaction)){
-                columnPrint(transaction);
+            for (Transaction transaction : transactions) {
+                if (filterTransactionsByDate(start, end, transaction)
+                        && filterTransactionsByDescription(description, transaction)
+                        && filterTransactionsByVendor(vendor, transaction)
+                        && filterTransactionsByAmount(amount, transaction)) {
+                    columnPrint(transaction);
 
+                }
             }
         }
-
+        catch (Exception e){
+            menuError();
+        }
     }
 
     /* ------------------------------------------------------------------
@@ -416,6 +430,11 @@ public class FinancialTracker {
     private static void columnPrint(Transaction transaction){
         System.out.printf("%-10tF|%-8tT|%-30s|%-20s|%.2f%n", transaction.getDate(), transaction.getTime(), transaction.getDescription(),
                 transaction.getVendor(), transaction.getAmount());
+    }
+
+    private static void menuError() throws InterruptedException {
+        System.err.println("\nInvalid option!");
+        Thread.sleep(900);
     }
 
 }
