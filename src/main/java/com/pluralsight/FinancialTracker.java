@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 
@@ -41,7 +40,7 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Main menu
        ------------------------------------------------------------------ */
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         loadTransactions(FILE_NAME);
 
 
@@ -145,7 +144,7 @@ public class FinancialTracker {
      * Amount must be entered as a positive number,
      * then converted to a negative amount before storing.
      */
-    private static void addPayment(Scanner scanner) throws IOException, InterruptedException {
+    private static void addPayment(Scanner scanner) throws InterruptedException {
         while (true) {
             try {
                 System.out.print("Enter the date and time of the deposit in the following format:\nyyyy-MM-dd HH:mm:ss :");
@@ -413,12 +412,12 @@ public class FinancialTracker {
     }
 
     private static void newestSort(){
-        Collections.sort(transactions, (transaction1, transaction2) -> transaction2.getDateTime()
+        transactions.sort((transaction1, transaction2) -> transaction2.getDateTime()
                 .compareTo(transaction1.getDateTime()));
     }
 
     private static void oldestSort(){
-        Collections.sort(transactions, Comparator.comparing(Transaction::getDateTime));
+        transactions.sort(Comparator.comparing(Transaction::getDateTime));
     }
 
     private static void ledgerWriter(ArrayList transactions) throws IOException {
