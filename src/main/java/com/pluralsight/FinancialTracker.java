@@ -267,13 +267,22 @@ public class FinancialTracker {
     }
 
     private static void previousMonthReport(){
-        int year = LocalDate.now().getYear();
-        int previousMonth = LocalDate.now().getMonthValue()-1;
+        int year;
+        int previousMonth;
+        if (LocalDate.now().getMonthValue() == 1){
+            year = LocalDate.now().getYear()-1;
+            previousMonth = 12;
+        }
+        else {
+            year = LocalDate.now().getYear();
+            previousMonth = LocalDate.now().getMonthValue()-1;
+        }
         newestSort();
         for (Transaction transaction : transactions){
             if (findMonthValue(transaction) == previousMonth && findYear(transaction) == year){
                 columnPrint(transaction);
             }
+
         }
 
     }
