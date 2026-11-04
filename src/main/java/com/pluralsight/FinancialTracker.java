@@ -301,12 +301,20 @@ public class FinancialTracker {
         }
     }
 
-    private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
-        // TODO – iterate transactions, print those within the range
+    private static boolean filterTransactionsByDate(LocalDate start, LocalDate end, Transaction transaction) {
+        return findDate(transaction).isAfter(start) && !findDate(transaction).isAfter(end);
+    }
+
+    private static boolean filterTransactionsByDescription(String description, Transaction transaction) {
+        return transaction.getDescription().equalsIgnoreCase(description);
     }
 
     private static boolean filterTransactionsByVendor(String vendor, Transaction transaction) {
         return findVendor(transaction).equalsIgnoreCase(vendor) || shortHand(findVendor(transaction)).equalsIgnoreCase(shortHand(vendor));
+    }
+
+    private static boolean filterTransactionsByAmount(double amount, Transaction transaction) {
+        return transaction.getAmount() == amount;
     }
 
     private static void customSearch(Scanner scanner) {
@@ -322,7 +330,7 @@ public class FinancialTracker {
         System.out.print("Amount:");
         double amount = parseDouble(scanner.nextLine());
 
-        filterTransactionsByDate(start,end);
+
     }
 
     /* ------------------------------------------------------------------
