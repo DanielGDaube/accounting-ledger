@@ -243,8 +243,8 @@ public class FinancialTracker {
             switch (input) {
                 case "1" -> monthReport(1);
                 case "2" -> monthReport(2);
-                case "3" -> yearReport();
-                case "4" -> {/* TODO – previous year report  */ }
+                case "3" -> yearReport(1);
+                case "4" -> yearReport(2);
                 case "5" -> {/* TODO – prompt for vendor then report */ }
                 case "6" -> customSearch(scanner);
                 case "0" -> running = false;
@@ -276,8 +276,11 @@ public class FinancialTracker {
         }
     }
 
-    private static void yearReport(){
+    private static void yearReport(int reportType){
         int year = LocalDate.now().getYear();
+        if (reportType == 2){
+            year -= 1;
+        }
         oldestSort();
         for (Transaction transaction : transactions){
             if (findYear(transaction) == year){
