@@ -118,10 +118,9 @@ public class FinancialTracker {
                 String vendor = scanner.nextLine();
                 System.out.print("Amount:");
                 double numAmount = parseDouble(scanner.nextLine());
-                if (numAmount < 0) {
+                if (numAmount <= 0) {
                     System.err.println("Inputted amount cannot be negative or 0!");
                     Thread.sleep(700);
-                    scanner.nextLine();
                     continue;
                 }
                 if (transactionType == 2){
