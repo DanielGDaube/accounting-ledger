@@ -19,6 +19,8 @@ public class FinancialTracker {
     public static final String ANSI_GREEN_BACKGROUND = "\033[0;102m";
     public static final String ANSI_RED_BACKGROUND = "\033[0;101m";
 
+
+    public static final String test = "\033[2J";
     /* ------------------------------------------------------------------
        Shared data and formatters
        ------------------------------------------------------------------ */
@@ -42,6 +44,10 @@ public class FinancialTracker {
     public static void main(String[] args) throws InterruptedException {
         loadTransactions(FILE_NAME);
         System.out.println(colorLogo(logo));
+        System.out.print("█████");
+Thread.sleep(500);
+        System.out.print("█████");
+        System.out.println("\033[2J");
 
 
         Scanner scanner = new Scanner(System.in);
@@ -417,7 +423,7 @@ public class FinancialTracker {
         else {
             background = ANSI_RED_BACKGROUND;
         }
-        System.out.printf(background + "%-10tF|%-8tT|%-30s|%-20s|%-8.2f" + ANSI_RESET + "%n",
+        System.out.printf(background + ANSI_BLACK + "%-10tF|%-8tT|%-30s|%-20s|%-8.2f" + ANSI_RESET + "%n",
                 transaction.getDate(), transaction.getTime(), transaction.getDescription(), transaction.getVendor(), transaction.getAmount());
     }
 
