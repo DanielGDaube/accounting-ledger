@@ -410,14 +410,15 @@ public class FinancialTracker {
     // prints Transaction objects with formatting to line up on | delimiters
     // deposits print in green, payments print in red
     private static void columnPrint(Transaction transaction) {
+        String background;
         if (transaction.getAmount() > 0) {
-            System.out.printf(ANSI_GREEN_BACKGROUND + ANSI_BLACK + "%-10tF|%-8tT|%-30s|%-20s|%-8.2f" + ANSI_RESET + "%n",
-                    transaction.getDate(), transaction.getTime(), transaction.getDescription(), transaction.getVendor(), transaction.getAmount());
+            background = ANSI_GREEN_BACKGROUND;
         }
         else {
-            System.out.printf(ANSI_RED_BACKGROUND + ANSI_BLACK + "%-10tF|%-8tT|%-30s|%-20s|%-8.2f" + ANSI_RESET + "%n",
-                    transaction.getDate(), transaction.getTime(), transaction.getDescription(), transaction.getVendor(), transaction.getAmount());
+            background = ANSI_RED_BACKGROUND;
         }
+        System.out.printf(background + "%-10tF|%-8tT|%-30s|%-20s|%-8.2f" + ANSI_RESET + "%n",
+                transaction.getDate(), transaction.getTime(), transaction.getDescription(), transaction.getVendor(), transaction.getAmount());
     }
 
     // prints an error message
