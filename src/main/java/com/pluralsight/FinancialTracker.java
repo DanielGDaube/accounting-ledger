@@ -157,9 +157,9 @@ public class FinancialTracker {
             String input = scanner.nextLine().trim();
 
             switch (input.toUpperCase()) {
-                case "A" -> displayLedger();
-                case "D" -> displayDeposits();
-                case "P" -> displayPayments();
+                case "A" -> displayLedger("All");
+                case "D" -> displayLedger("Deposits");
+                case "P" -> displayLedger("Payments");
                 case "R" -> reportsMenu(scanner);
                 case "H" -> running = false;
                 default -> menuError();
@@ -170,35 +170,30 @@ public class FinancialTracker {
     /* ------------------------------------------------------------------
        Display helpers: show data in neat columns
        ------------------------------------------------------------------ */
-    // all 3 display from newest to oldest
 
-    // displays every transaction
-    private static void displayLedger() {
+    // displays every transaction from newest to oldest
+
+    private static void displayLedger(String displayType){
         newestSort();
         for (Transaction transaction : transactions){
-            columnPrint(transaction);
-        }
-    }
+            // displays only deposits (transactions with a positive number)
+            if (displayType.equals("Deposits")){
+                if (transaction.getAmount() > 0){
+                    columnPrint(transaction);
+                }
 
-    // displays only deposits (transactions with a positive number)
-    private static void displayDeposits() {
-        newestSort();
-        for (Transaction transaction : transactions) {
-            if (transaction.getAmount() > 0){
+                // displays only payments (transactions with a negative number)
+            } else if (displayType.equals("Payments")) {
+                if (transaction.getAmount() < 0){
+                    columnPrint(transaction);
+                }
+
+            }
+            else{
                 columnPrint(transaction);
             }
         }
     }
-
-    // displays only payments (transactions with a negative number)
-    private static void displayPayments() {
-        newestSort();
-        for (Transaction transaction : transactions) {
-            if (transaction.getAmount() < 0){
-                columnPrint(transaction);
-            }
-        }
-         }
 
     /* ------------------------------------------------------------------
        Reports menu
@@ -322,6 +317,14 @@ public class FinancialTracker {
             return Math.abs(transaction.getAmount()) == parseDouble(amount);
     }
 
+    // combines all the filters into one
+    private static boolean customSearchFilter(Transaction transaction, LocalDate start, LocalDate end, String description, String vendor, String amount){
+        return filterTransactionsByDate(start, end, transaction)
+                && filterTransactionsByDescription(description, transaction)
+                && filterTransactionsByVendor(vendor, transaction)
+                && filterTransactionsByAmount(amount, transaction);
+    }
+
     // prompts the user for transaction data and runs the data through filters
     // prints only transactions that match all given data
     // if a filter is left blank it is considered valid for all transactions
@@ -340,10 +343,7 @@ public class FinancialTracker {
             String amount = scanner.nextLine();
 
             for (Transaction transaction : transactions) {
-                if (filterTransactionsByDate(start, end, transaction)
-                        && filterTransactionsByDescription(description, transaction)
-                        && filterTransactionsByVendor(vendor, transaction)
-                        && filterTransactionsByAmount(amount, transaction)) {
+                if (customSearchFilter(transaction, start, end,description, vendor, amount)) {
                     columnPrint(transaction);
 
                 }
