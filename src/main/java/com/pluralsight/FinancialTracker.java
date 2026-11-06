@@ -42,12 +42,13 @@ public class FinancialTracker {
     public static void main(String[] args) throws InterruptedException {
         loadTransactions(FILE_NAME);
         System.out.println(colorLogo(logo));
-        loadingBar();
+
 
 
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
         welcomeScreen(scanner);
+
 
         while (running) {
             System.out.println("Choose an option:");
@@ -503,18 +504,8 @@ public class FinancialTracker {
         return logo+ANSI_RESET;
     }
 
-    // calls loadingBarChunk() to simulate a loading bar
-    public static void loadingBar() throws InterruptedException {
-        System.out.println("   Loading...");
-        System.out.print("   ");
-        loadingBarChunk(8,1,90);
-        loadingBarChunk(3,1,120);
-        loadingBarChunk(7,8,330);
-        loadingBarChunk(3,10,330);
-    }
-
     // prints a series of blocks based on entered number of prints, blocks per print, and length of pauses between prints
-    public static void loadingBarChunk(int prints, int blocks, int millis) throws InterruptedException {
+    public static void loadingBar(int prints, int blocks, int millis) throws InterruptedException {
         String loading = "";
         for (int j = 0; j < blocks ; j++) {
             loading += "█";
@@ -525,11 +516,17 @@ public class FinancialTracker {
         }
     }
 
-    // displays a welcome message and waits for the user to press enter before continuing to the home screen
-    public static void welcomeScreen(Scanner scanner){
-        System.out.print(ANSI_RED+"\r                       WELCOME TO THE RUPTURE FARMS VIRTUAL LEDGER\n\n"+ANSI_RESET);
-           do{ System.out.println("Press Enter to continue");}
-           while (!scanner.nextLine().isBlank());
+    // displays a welcome message and a loading bar
+    // when the loading bar is done it waits for the user to press enter before continuing to the home screen
+    public static void welcomeScreen(Scanner scanner) throws InterruptedException {
+        System.out.print(ANSI_RED+"                       WELCOME TO THE RUPTURE FARMS VIRTUAL LEDGER\n\n"+ANSI_RESET);
 
+        System.out.print("Loading...");
+        loadingBar(7,1,90);
+        loadingBar(3,1,120);
+        loadingBar(7,8,330);
+        loadingBar(3,9,330);
+        do{ System.out.println("\rPress Enter to continue:");}
+        while (!scanner.nextLine().isBlank());
     }
 }
