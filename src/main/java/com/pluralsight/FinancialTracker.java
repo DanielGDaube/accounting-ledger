@@ -519,7 +519,7 @@ public class FinancialTracker {
     // displays a welcome message and a loading bar
     // when the loading bar is done it waits for the user to press enter before continuing to the home screen
     public static void welcomeScreen(Scanner scanner) throws InterruptedException {
-        System.out.print(ANSI_RED+"                       WELCOME TO THE RUPTURE FARMS VIRTUAL LEDGER\n\n"+ANSI_RESET);
+        System.out.print(ANSI_RED+"                           WELCOME TO THE RUPTURE FARMS VIRTUAL LEDGER\n\n"+ANSI_RESET);
 
         System.out.print("Loading...");
         loadingBar(7,1,90);

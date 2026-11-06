@@ -101,7 +101,7 @@ Added transactions are saved between sessions by using the csv file.
 
 ![Main menu](images/menu.png)
 
-![One feature in action](images/feature.png)
+![One feature in action](images/custom-search.gif)
 
 ## A piece of code I am proud of
 
@@ -110,15 +110,25 @@ Added transactions are saved between sessions by using the csv file.
      demo day and what you talk about in an interview. -->
 
 ```java
-
+private static String shortHand(String vendor){
+        if (vendor.contains(" ")){
+            int spaceIndex = vendor.indexOf(' ');
+            vendor = vendor.substring(0, spaceIndex);
+        }
+        if (vendor.contains("'")){
+            vendor = vendor.replace("'","");
+        }
+        return vendor;
+    }
 ```
-
+This code checks if the vendor name has a space in it and if it does, it shortens the vendor
+name to everything before the space so that the user doesn't have to type out the full name
 ## Future Work
 
 <!-- What you would add or fix next, one bullet each. Unfinished bonuses belong here. -->
 
--
--
+- Add a custom search option
+- Customize the menus to look better
 
 ## Resources
 
@@ -131,10 +141,11 @@ Added transactions are saved between sessions by using the csv file.
 
 <!-- Your name and, if you like, your GitHub profile link. For a team workshop, one line per person with what each one built. -->
 
-- **Your Name**
+- **Daniel Daube**
 
 ## Thanks
 
 <!-- Optional. The people who helped: the instructor, a classmate who debugged with you, a mentor. -->
 
-- Thank you to ... for ...
+- Thank you to Raymond for being a great instructor
+- Thank you to Fabricio for helping with debugging
