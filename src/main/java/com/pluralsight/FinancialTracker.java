@@ -302,7 +302,6 @@ public class FinancialTracker {
         if (start != null && transaction.getDate().isBefore(start)) {
             return false;
         }
-
         if (end != null && transaction.getDate().isAfter(end)) {
             return false;
         }
@@ -444,6 +443,7 @@ public class FinancialTracker {
         Thread.sleep(900);
     }
 
+    // prints a message if no transactions were found with the filter
     private static void foundCheck(int found){
         if (found == 0){
             System.out.println("No matching transactions found");
@@ -503,6 +503,7 @@ public class FinancialTracker {
         return logo+ANSI_RESET;
     }
 
+    // calls loadingBarChunk() to simulate a loading bar
     public static void loadingBar() throws InterruptedException {
         System.out.println("   Loading...");
         System.out.print("   ");
@@ -512,6 +513,7 @@ public class FinancialTracker {
         loadingBarChunk(3,10,330);
     }
 
+    // prints a series of blocks based on entered number of prints, blocks per print, and length of pauses between prints
     public static void loadingBarChunk(int prints, int blocks, int millis) throws InterruptedException {
         String loading = "";
         for (int j = 0; j < blocks ; j++) {
@@ -523,6 +525,7 @@ public class FinancialTracker {
         }
     }
 
+    // displays a welcome message and waits for the user to press enter before continuing to the home screen
     public static void welcomeScreen(Scanner scanner){
         System.out.print(ANSI_RED+"\r                       WELCOME TO THE RUPTURE FARMS VIRTUAL LEDGER\n\n"+ANSI_RESET);
            do{ System.out.println("Press Enter to continue");}
