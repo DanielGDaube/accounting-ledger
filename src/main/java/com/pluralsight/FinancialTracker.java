@@ -175,25 +175,30 @@ public class FinancialTracker {
     // displays every transaction from newest to oldest
 
     private static void displayLedger(String displayType){
+        int found = 0;
         newestSort();
         for (Transaction transaction : transactions){
             // displays only deposits (transactions with a positive number)
             if (displayType.equals("Deposits")){
                 if (transaction.getAmount() > 0){
                     columnPrint(transaction);
+                    found++;
                 }
 
                 // displays only payments (transactions with a negative number)
             } else if (displayType.equals("Payments")) {
                 if (transaction.getAmount() < 0){
                     columnPrint(transaction);
+                    found++;
                 }
 
             }
             else{
                 columnPrint(transaction);
+                found++;
             }
         }
+        foundCheck(found);
     }
 
     /* ------------------------------------------------------------------
@@ -239,6 +244,7 @@ public class FinancialTracker {
     // if the user selected month-to-date, displays all transactions from the current month
     // if the user selected previous month, displays all transactions from the previous month
     private static void monthReport(int reportType){
+        int found = 0;
         int year = LocalDate.now().getYear();
         int month = LocalDate.now().getMonthValue();
         if (reportType == 2) {
@@ -254,13 +260,16 @@ public class FinancialTracker {
         for (Transaction transaction : transactions){
             if (transaction.getDate().getMonthValue() == month && transaction.getDate().getYear() == year){
                 columnPrint(transaction);
+                found++;
             }
         }
+        foundCheck(found);
     }
 
     // if the user selected year-to-date, displays all transactions from the current year
     // if the user selected previous year, displays all transactions from the previous year
     private static void yearReport(int reportType){
+        int found = 0;
         int year = LocalDate.now().getYear();
         if (reportType == 2){
             year -= 1;
@@ -269,19 +278,22 @@ public class FinancialTracker {
         for (Transaction transaction : transactions){
             if (transaction.getDate().getYear() == year){
                 columnPrint(transaction);
+                found++;
             }
         }
-
+        foundCheck(found);
     }
 
     // prints reports matching the user entered vendor name
     private static void vendorReport(String vendor){
+        int found = 0;
         newestSort();
         for (Transaction transaction : transactions){
             if (filterTransactionsByVendor(vendor, transaction)) {
                 columnPrint(transaction);
             }
         }
+        foundCheck(found);
     }
 
     // methods for filtering by different pieces of user entered data, used with custom search method
@@ -331,6 +343,8 @@ public class FinancialTracker {
     // if a filter is left blank it is considered valid for all transactions
     private static void customSearch(Scanner scanner) throws InterruptedException {
         try {
+            int found = 0;
+
             System.out.println("Please enter the following filters to narrow search, or leave blank to ignore filter");
             System.out.print("Start Date:");
             LocalDate start = parseDate(scanner.nextLine());
@@ -346,9 +360,11 @@ public class FinancialTracker {
             for (Transaction transaction : transactions) {
                 if (customSearchFilter(transaction, start, end,description, vendor, amount)) {
                     columnPrint(transaction);
+                    found++;
 
                 }
             }
+            foundCheck(found);
         }
         catch (Exception e){
             menuError();
@@ -426,6 +442,12 @@ public class FinancialTracker {
     private static void menuError() throws InterruptedException {
         System.err.println("\nInvalid option!");
         Thread.sleep(900);
+    }
+
+    private static void foundCheck(int found){
+        if (found == 0){
+            System.out.println("No matching transactions found");
+        }
     }
 
     // Initializes start up logo
